@@ -325,7 +325,7 @@ function renderDatePanel(){
   if(!filterDate){panel.style.display="none";return;}
   const d=new Date(filterDate+"T00:00:00");
   const days=["일","월","화","수","목","금","토"];
-  const holidayStr=HOLIDAYS[filterDate]?` · 🎌 ${HOLIDAYS[filterDate]}`:"";
+  const holidayStr=HOLIDAYS[filterDate]?` · ${HOLIDAYS[filterDate]}`:"";
   document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})${holidayStr}`;
   panel.style.display="block";
   const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
