@@ -22,7 +22,7 @@
   --accent: #4fc3f7;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 520px; margin: 0 auto; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 520px; margin: 0 auto; padding-bottom: 40px; }
 
 .header { background: var(--surface); padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
 .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
@@ -38,16 +38,19 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .cal-days-header span:first-child { color: #ef5350; }
 .cal-days-header span:last-child { color: var(--accent); }
 .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
-.day-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; padding: 4px 2px 2px; border-radius: 10px; cursor: pointer; transition: background 0.15s; }
+.day-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; padding: 3px 2px 2px; border-radius: 10px; cursor: pointer; transition: background 0.15s; position: relative; }
 .day-cell:hover { background: rgba(255,255,255,0.05); }
 .day-cell.selected { background: rgba(79,195,247,0.15); outline: 1.5px solid rgba(79,195,247,0.5); }
-.day-cell.today .day-num { background: var(--accent); color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.day-cell.today .day-num { background: var(--accent); color: #000; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
 .day-cell.other-month .day-num { color: rgba(255,255,255,0.18); }
-.day-num { font-size: 13px; font-weight: 400; line-height: 24px; width: 24px; text-align: center; }
-.dot-row { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; }
-.dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.day-cell.holiday .day-num { color: #ef5350 !important; }
+.day-cell.today.holiday .day-num { background: #ef5350; color: #fff !important; }
+.day-num { font-size: 12px; font-weight: 400; line-height: 22px; width: 22px; text-align: center; }
+.holiday-name { font-size: 7px; color: #ef5350; text-align: center; line-height: 1; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 1px; }
+.dot-row { display: flex; gap: 2px; margin-top: 1px; flex-wrap: wrap; justify-content: center; }
+.dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
 
-/* Status badges */
+/* Status */
 .status-wrap { padding: 0.5rem 1rem 0.25rem; }
 .status-label { font-size: 10px; color: var(--text2); margin-bottom: 5px; }
 .status-row { display: flex; gap: 5px; flex-wrap: wrap; }
@@ -68,12 +71,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .date-ev-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
 .date-ev-actions { display: flex; gap: 4px; flex-shrink: 0; }
 .date-ev-edit { background: rgba(79,195,247,0.12); border: 1px solid rgba(79,195,247,0.3); color: var(--accent); border-radius: 8px; font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: inherit; }
-.date-ev-edit:hover { background: rgba(79,195,247,0.22); }
 .date-ev-del { background: rgba(239,83,80,0.12); border: 1px solid rgba(239,83,80,0.3); color: #ef5350; border-radius: 8px; font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: inherit; }
-.date-ev-del:hover { background: rgba(239,83,80,0.22); }
 .date-empty { font-size: 13px; color: var(--text2); text-align: center; padding: 1rem 0; }
+.holiday-notice { font-size: 11px; color: #ef5350; padding: 6px 4px 2px; }
 
-/* Edit modal */
+/* Modal */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
 .modal { background: var(--surface); border-radius: var(--radius) var(--radius) 0 0; padding: 1.25rem 1rem 2rem; width: 100%; max-width: 520px; border-top: 1px solid var(--border); }
 .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; }
@@ -94,8 +96,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .submit-btn { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
 /* Comments */
-.section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 10px; margin-top: 1rem; }
-.event-card { background: var(--surface); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--border); border-left: 3px solid; }
+.event-card { background: var(--surface); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--border); border-left: 3px solid; margin-top: 8px; }
 .ev-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .ev-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
 .ev-title { font-size: 14px; font-weight: 500; flex: 1; }
@@ -110,8 +111,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .comment-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 12px; padding: 6px 10px; outline: none; }
 .comment-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-size: 12px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
 
-.empty { text-align: center; padding: 2rem 0; color: var(--text2); font-size: 13px; }
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; display: none; z-index: 999; white-space: nowrap; }
+.watermark { position: fixed; bottom: 10px; right: 14px; font-size: 10px; color: #ffffff; font-family: 'Noto Sans KR', sans-serif; pointer-events: none; z-index: 50; letter-spacing: 0.3px; }
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; display: none; z-index: 999; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -135,13 +136,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div class="cal-grid" id="cal-grid"></div>
 </div>
 
-<!-- 반응기 현황 -->
 <div class="status-wrap">
   <div class="status-label" id="status-label">오늘 가동 현황</div>
   <div class="status-row" id="status-row"></div>
 </div>
 
-<!-- 날짜 클릭 패널 -->
 <div class="date-panel" id="date-panel" style="display:none">
   <div class="date-panel-header">
     <span class="date-panel-title" id="date-panel-title"></span>
@@ -150,7 +149,6 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div class="date-panel-body" id="date-panel-body"></div>
 </div>
 
-<!-- 추가 폼 -->
 <div class="section">
   <div class="add-form">
     <div class="form-label">반응기 선택 *</div>
@@ -158,38 +156,24 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <label class="form-label">일정 제목 *</label>
     <input class="form-input" id="f-title" placeholder="예: A물질 합성 반응, 세척 및 점검..." />
     <div class="form-row">
-      <div>
-        <label class="form-label">시작일 *</label>
-        <input class="form-input" type="date" id="f-start" />
-      </div>
-      <div>
-        <label class="form-label">종료일 *</label>
-        <input class="form-input" type="date" id="f-end" />
-      </div>
+      <div><label class="form-label">시작일 *</label><input class="form-input" type="date" id="f-start" /></div>
+      <div><label class="form-label">종료일 *</label><input class="form-input" type="date" id="f-end" /></div>
     </div>
     <div class="form-row">
-      <div>
-        <label class="form-label">담당자</label>
-        <input class="form-input" id="f-who" placeholder="이름" />
-      </div>
-      <div>
-        <label class="form-label">메모</label>
-        <input class="form-input" id="f-memo" placeholder="간단한 메모..." />
-      </div>
+      <div><label class="form-label">담당자</label><input class="form-input" id="f-who" placeholder="이름" /></div>
+      <div><label class="form-label">메모</label><input class="form-input" id="f-memo" placeholder="간단한 메모..." /></div>
     </div>
     <button class="submit-btn" onclick="addEvent()">+ 일정 추가</button>
   </div>
   <div id="events-list"></div>
 </div>
 
-<!-- 수정 모달 -->
 <div class="modal-bg" id="edit-modal" style="display:none" onclick="if(event.target===this)closeEdit()">
   <div class="modal">
     <div class="modal-title">일정 수정</div>
     <div class="form-label">반응기</div>
     <div class="cat-pick" id="edit-cat-pick" style="margin-bottom:12px"></div>
-    <label class="form-label">제목</label>
-    <input class="form-input" id="e-title" />
+    <label class="form-label">제목</label><input class="form-input" id="e-title" />
     <div class="form-row">
       <div><label class="form-label">시작일</label><input class="form-input" type="date" id="e-start" /></div>
       <div><label class="form-label">종료일</label><input class="form-input" type="date" id="e-end" /></div>
@@ -205,6 +189,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   </div>
 </div>
 
+<div class="watermark">26.04.08. V1_장남규</div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -224,6 +209,32 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const col = collection(db, "events");
 
+// 한국 공휴일 (2024~2027)
+const HOLIDAYS = {
+  "2024-01-01":"신정","2024-02-09":"설날연휴","2024-02-10":"설날","2024-02-11":"설날연휴",
+  "2024-02-12":"대체공휴일","2024-03-01":"삼일절","2024-04-10":"국회의원선거",
+  "2024-05-05":"어린이날","2024-05-06":"대체공휴일","2024-05-15":"부처님오신날",
+  "2024-06-06":"현충일","2024-08-15":"광복절","2024-09-16":"추석연휴",
+  "2024-09-17":"추석","2024-09-18":"추석연휴","2024-10-03":"개천절",
+  "2024-10-09":"한글날","2024-12-25":"크리스마스",
+  "2025-01-01":"신정","2025-01-28":"설날연휴","2025-01-29":"설날","2025-01-30":"설날연휴",
+  "2025-03-01":"삼일절","2025-03-03":"대체공휴일","2025-05-05":"어린이날",
+  "2025-05-06":"부처님오신날","2025-06-06":"현충일","2025-08-15":"광복절",
+  "2025-10-05":"추석연휴","2025-10-06":"추석","2025-10-07":"추석연휴",
+  "2025-10-08":"대체공휴일","2025-10-03":"개천절","2025-10-09":"한글날",
+  "2025-12-25":"크리스마스",
+  "2026-01-01":"신정","2026-02-17":"설날연휴","2026-02-18":"설날","2026-02-19":"설날연휴",
+  "2026-03-01":"삼일절","2026-03-02":"대체공휴일","2026-05-05":"어린이날",
+  "2026-05-24":"부처님오신날","2026-06-06":"현충일","2026-08-15":"광복절",
+  "2026-09-24":"추석연휴","2026-09-25":"추석","2026-09-26":"추석연휴",
+  "2026-10-03":"개천절","2026-10-09":"한글날","2026-12-25":"크리스마스",
+  "2027-01-01":"신정","2027-02-07":"설날연휴","2027-02-08":"설날","2027-02-09":"설날연휴",
+  "2027-03-01":"삼일절","2027-05-05":"어린이날","2027-05-13":"부처님오신날",
+  "2027-06-06":"현충일","2027-08-15":"광복절","2027-10-03":"개천절",
+  "2027-10-09":"한글날","2027-10-14":"추석연휴","2027-10-15":"추석","2027-10-16":"추석연휴",
+  "2027-12-25":"크리스마스"
+};
+
 const CATS = [
   { id:"LR1", color:"#4fc3f7", text:"#000" },
   { id:"LR2", color:"#81c784", text:"#000" },
@@ -236,58 +247,52 @@ const CATS = [
   { id:"철야", color:"#ff8a65", text:"#000" },
 ];
 
-let selCat = CATS[0];
-let editSelCat = CATS[0];
-let editId = null;
-let curY = new Date().getFullYear();
-let curM = new Date().getMonth() + 1;
-let filterDate = null;
-let allEvents = [];
+let selCat=CATS[0], editSelCat=CATS[0], editId=null;
+let curY=new Date().getFullYear(), curM=new Date().getMonth()+1;
+let filterDate=null, allEvents=[];
 
-const pad = n => String(n).padStart(2,"0");
-const makeDS = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
-const todayDS = () => { const t=new Date(); return makeDS(t.getFullYear(),t.getMonth()+1,t.getDate()); };
+const pad=n=>String(n).padStart(2,"0");
+const makeDS=(y,m,d)=>`${y}-${pad(m)}-${pad(d)}`;
+const todayDS=()=>{const t=new Date();return makeDS(t.getFullYear(),t.getMonth()+1,t.getDate());};
 
-function dateRange(start, end) {
-  const dates=[], endD=new Date(end+"T00:00:00");
+function dateRange(start,end){
+  const dates=[],endD=new Date(end+"T00:00:00");
   let cur=new Date(start+"T00:00:00");
-  while(cur<=endD){ dates.push(makeDS(cur.getFullYear(),cur.getMonth()+1,cur.getDate())); cur.setDate(cur.getDate()+1); }
+  while(cur<=endD){dates.push(makeDS(cur.getFullYear(),cur.getMonth()+1,cur.getDate()));cur.setDate(cur.getDate()+1);}
   return dates;
 }
 
-function buildCatPick() {
-  const cp=document.getElementById("cat-pick"); cp.innerHTML="";
+function buildCatPick(){
+  const cp=document.getElementById("cat-pick");cp.innerHTML="";
   CATS.forEach((c,i)=>{
     const d=document.createElement("div");
-    d.className="cpick"+(i===0?" on":""); d.style.background=c.color; d.style.color=c.text; d.textContent=c.id;
-    d.onclick=()=>{ document.querySelectorAll("#cat-pick .cpick").forEach(x=>x.classList.remove("on")); d.classList.add("on"); selCat=c; };
+    d.className="cpick"+(i===0?" on":"");d.style.background=c.color;d.style.color=c.text;d.textContent=c.id;
+    d.onclick=()=>{document.querySelectorAll("#cat-pick .cpick").forEach(x=>x.classList.remove("on"));d.classList.add("on");selCat=c;};
     cp.appendChild(d);
   });
 }
 
-function buildEditCatPick(currentCat) {
-  const cp=document.getElementById("edit-cat-pick"); cp.innerHTML="";
+function buildEditCatPick(currentCat){
+  const cp=document.getElementById("edit-cat-pick");cp.innerHTML="";
   CATS.forEach(c=>{
     const d=document.createElement("div");
-    d.className="cpick"+(c.id===currentCat?" on":""); d.style.background=c.color; d.style.color=c.text; d.textContent=c.id;
-    d.onclick=()=>{ document.querySelectorAll("#edit-cat-pick .cpick").forEach(x=>x.classList.remove("on")); d.classList.add("on"); editSelCat=c; };
+    d.className="cpick"+(c.id===currentCat?" on":"");d.style.background=c.color;d.style.color=c.text;d.textContent=c.id;
+    d.onclick=()=>{document.querySelectorAll("#edit-cat-pick .cpick").forEach(x=>x.classList.remove("on"));d.classList.add("on");editSelCat=c;};
     cp.appendChild(d);
-    if(c.id===currentCat) editSelCat=c;
+    if(c.id===currentCat)editSelCat=c;
   });
 }
 
-function renderStatusRow() {
-  // 선택된 날짜 있으면 그 날짜 기준, 없으면 오늘 기준
-  const checkDate = filterDate || todayDS();
-  const activeIds = new Set(allEvents.filter(e=>dateRange(e.start,e.end).includes(checkDate)).map(e=>e.cat));
-  const label = document.getElementById("status-label");
-  label.textContent = filterDate ? `${filterDate} 가동 현황` : "오늘 가동 현황";
-  document.getElementById("status-row").innerHTML = CATS.map(c=>
+function renderStatusRow(){
+  const checkDate=filterDate||todayDS();
+  const activeIds=new Set(allEvents.filter(e=>dateRange(e.start,e.end).includes(checkDate)).map(e=>e.cat));
+  document.getElementById("status-label").textContent=filterDate?`${filterDate} 가동 현황`:"오늘 가동 현황";
+  document.getElementById("status-row").innerHTML=CATS.map(c=>
     `<span class="status-badge${activeIds.has(c.id)?" active":""}" style="background:${c.color};color:${c.text}">${c.id}</span>`
   ).join("");
 }
 
-function renderCalendar() {
+function renderCalendar(){
   const grid=document.getElementById("cal-grid");
   const today=new Date();
   const firstDay=new Date(curY,curM-1,1).getDay();
@@ -298,31 +303,34 @@ function renderCalendar() {
 
   const addCell=(d,ds,other,isToday)=>{
     const cell=document.createElement("div");
-    cell.className="day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"");
+    const isHoliday=!!HOLIDAYS[ds];
+    const isSun=new Date(ds+"T00:00:00").getDay()===0;
+    cell.className="day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"")+((isHoliday||isSun)&&!other?" holiday":"");
     const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(ds));
     const uniq=[...new Map(evs.map(e=>[e.color,e])).values()].slice(0,5);
-    cell.innerHTML=`<div class="day-num">${d}</div><div class="dot-row">${uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("")}</div>`;
-    cell.onclick=()=>{ filterDate=filterDate===ds?null:ds; renderAll(); };
+    const holidayName=HOLIDAYS[ds]?`<div class="holiday-name">${HOLIDAYS[ds]}</div>`:"";
+    cell.innerHTML=`<div class="day-num">${d}</div>${holidayName}<div class="dot-row">${uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("")}</div>`;
+    cell.onclick=()=>{filterDate=filterDate===ds?null:ds;renderAll();};
     grid.appendChild(cell);
   };
 
-  for(let i=0;i<firstDay;i++){ const d=prevDays-firstDay+1+i,m=curM===1?12:curM-1,y=curM===1?curY-1:curY; addCell(d,makeDS(y,m,d),true,false); }
-  for(let d=1;d<=daysInMonth;d++){ const ds=makeDS(curY,curM,d); addCell(d,ds,false,today.getFullYear()===curY&&today.getMonth()+1===curM&&today.getDate()===d); }
+  for(let i=0;i<firstDay;i++){const d=prevDays-firstDay+1+i,m=curM===1?12:curM-1,y=curM===1?curY-1:curY;addCell(d,makeDS(y,m,d),true,false);}
+  for(let d=1;d<=daysInMonth;d++){const ds=makeDS(curY,curM,d);addCell(d,ds,false,today.getFullYear()===curY&&today.getMonth()+1===curM&&today.getDate()===d);}
   const rem=42-firstDay-daysInMonth;
-  for(let d=1;d<=rem;d++){ const m=curM===12?1:curM+1,y=curM===12?curY+1:curY; addCell(d,makeDS(y,m,d),true,false); }
+  for(let d=1;d<=rem;d++){const m=curM===12?1:curM+1,y=curM===12?curY+1:curY;addCell(d,makeDS(y,m,d),true,false);}
 }
 
-function renderDatePanel() {
+function renderDatePanel(){
   const panel=document.getElementById("date-panel");
-  if(!filterDate){ panel.style.display="none"; return; }
+  if(!filterDate){panel.style.display="none";return;}
   const d=new Date(filterDate+"T00:00:00");
   const days=["일","월","화","수","목","금","토"];
-  document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})`;
+  const holidayStr=HOLIDAYS[filterDate]?` · 🎌 ${HOLIDAYS[filterDate]}`:"";
+  document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})${holidayStr}`;
   panel.style.display="block";
-
   const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
   const body=document.getElementById("date-panel-body");
-  if(!evs.length){ body.innerHTML='<div class="date-empty">이 날 일정이 없습니다</div>'; return; }
+  if(!evs.length){body.innerHTML='<div class="date-empty">이 날 일정이 없습니다</div>';return;}
   body.innerHTML=evs.map(ev=>`
     <div class="date-ev-item">
       <span class="date-ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span>
@@ -337,25 +345,21 @@ function renderDatePanel() {
     </div>`).join("");
 }
 
-function renderList() {
+function renderList(){
   const list=document.getElementById("events-list");
-  if(!filterDate){ list.innerHTML=""; return; }
+  if(!filterDate){list.innerHTML="";return;}
   const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
-  if(!evs.length){ list.innerHTML=""; return; }
+  if(!evs.length){list.innerHTML="";return;}
   list.innerHTML=evs.map(ev=>{
     const dateStr=ev.start===ev.end?ev.start:`${ev.start} ~ ${ev.end}`;
     const cmts=(ev.comments||[]).map((c,ci)=>
       `<div class="comment-item"><span class="comment-text">${c}</span><button class="comment-del" onclick="window._delCmt('${ev.id}',${ci})">✕</button></div>`
     ).join("");
-    return `<div class="event-card" style="border-left-color:${ev.color};margin-top:8px">
-      <div class="ev-header">
-        <span class="ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span>
-        <span class="ev-title">${ev.title}</span>
-      </div>
+    return `<div class="event-card" style="border-left-color:${ev.color}">
+      <div class="ev-header"><span class="ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span><span class="ev-title">${ev.title}</span></div>
       <div class="ev-meta">${dateStr}${ev.who?" · "+ev.who:""}</div>
       ${ev.memo?`<div class="ev-memo">${ev.memo}</div>`:""}
-      <div class="comments">
-        ${cmts}
+      <div class="comments">${cmts}
         <div class="comment-form">
           <input class="comment-input" id="cmt-${ev.id}" placeholder="댓글 추가..." onkeydown="if(event.key==='Enter')window._addCmt('${ev.id}',this)"/>
           <button class="comment-btn" onclick="window._addCmt('${ev.id}',document.getElementById('cmt-${ev.id}'))">등록</button>
@@ -365,14 +369,14 @@ function renderList() {
   }).join("");
 }
 
-function renderAll(){ renderCalendar(); renderStatusRow(); renderDatePanel(); renderList(); }
+function renderAll(){renderCalendar();renderStatusRow();renderDatePanel();renderList();}
 
-onSnapshot(query(col,orderBy("start")), snap=>{
+onSnapshot(query(col,orderBy("start")),snap=>{
   allEvents=snap.docs.map(d=>({id:d.id,...d.data()}));
   renderAll();
 });
 
-window.addEvent = async()=>{
+window.addEvent=async()=>{
   const title=document.getElementById("f-title").value.trim();
   const start=document.getElementById("f-start").value;
   const end=document.getElementById("f-end").value;
@@ -381,68 +385,48 @@ window.addEvent = async()=>{
   if(!title||!start||!end){showToast("제목과 기간을 입력해주세요");return;}
   if(end<start){showToast("종료일이 시작일보다 빠릅니다");return;}
   await addDoc(col,{title,start,end,who,memo,color:selCat.color,catText:selCat.text,cat:selCat.id,comments:[],createdAt:Date.now()});
-  document.getElementById("f-title").value="";
-  document.getElementById("f-who").value="";
-  document.getElementById("f-memo").value="";
+  document.getElementById("f-title").value="";document.getElementById("f-who").value="";document.getElementById("f-memo").value="";
   showToast(`${selCat.id} 일정 추가 완료 ✓`);
 };
 
-window._openEdit = id=>{
-  const ev=allEvents.find(e=>e.id===id); if(!ev)return;
-  editId=id;
-  buildEditCatPick(ev.cat);
-  document.getElementById("e-title").value=ev.title||"";
-  document.getElementById("e-start").value=ev.start||"";
-  document.getElementById("e-end").value=ev.end||"";
-  document.getElementById("e-who").value=ev.who||"";
-  document.getElementById("e-memo").value=ev.memo||"";
-  document.getElementById("edit-modal").style.display="flex";
+window._openEdit=id=>{
+  const ev=allEvents.find(e=>e.id===id);if(!ev)return;
+  editId=id;buildEditCatPick(ev.cat);
+  document.getElementById("e-title").value=ev.title||"";document.getElementById("e-start").value=ev.start||"";
+  document.getElementById("e-end").value=ev.end||"";document.getElementById("e-who").value=ev.who||"";
+  document.getElementById("e-memo").value=ev.memo||"";document.getElementById("edit-modal").style.display="flex";
 };
-
-window.closeEdit=()=>{ document.getElementById("edit-modal").style.display="none"; editId=null; };
-
+window.closeEdit=()=>{document.getElementById("edit-modal").style.display="none";editId=null;};
 window.saveEdit=async()=>{
   if(!editId)return;
   const title=document.getElementById("e-title").value.trim();
-  const start=document.getElementById("e-start").value;
-  const end=document.getElementById("e-end").value;
-  const who=document.getElementById("e-who").value.trim();
-  const memo=document.getElementById("e-memo").value.trim();
+  const start=document.getElementById("e-start").value,end=document.getElementById("e-end").value;
+  const who=document.getElementById("e-who").value.trim(),memo=document.getElementById("e-memo").value.trim();
   if(!title||!start||!end){showToast("제목과 기간을 입력해주세요");return;}
   if(end<start){showToast("종료일이 시작일보다 빠릅니다");return;}
   await updateDoc(doc(db,"events",editId),{title,start,end,who,memo,color:editSelCat.color,catText:editSelCat.text,cat:editSelCat.id});
-  closeEdit(); showToast("수정됐습니다 ✓");
+  closeEdit();showToast("수정됐습니다 ✓");
 };
-
-window._delEv=async id=>{
-  if(!confirm("이 일정을 삭제할까요?"))return;
-  await deleteDoc(doc(db,"events",id)); showToast("삭제됐습니다");
-};
+window._delEv=async id=>{if(!confirm("이 일정을 삭제할까요?"))return;await deleteDoc(doc(db,"events",id));showToast("삭제됐습니다");};
 window._addCmt=async(id,input)=>{
-  const val=input.value.trim(); if(!val)return;
-  const ev=allEvents.find(e=>e.id===id); if(!ev)return;
-  await updateDoc(doc(db,"events",id),{comments:[...(ev.comments||[]),val]}); input.value="";
+  const val=input.value.trim();if(!val)return;
+  const ev=allEvents.find(e=>e.id===id);if(!ev)return;
+  await updateDoc(doc(db,"events",id),{comments:[...(ev.comments||[]),val]});input.value="";
 };
 window._delCmt=async(id,idx)=>{
-  const ev=allEvents.find(e=>e.id===id); if(!ev)return;
+  const ev=allEvents.find(e=>e.id===id);if(!ev)return;
   await updateDoc(doc(db,"events",id),{comments:(ev.comments||[]).filter((_,i)=>i!==idx)});
 };
-window.changeMonth=d=>{
-  curM+=d; if(curM>12){curM=1;curY++;} if(curM<1){curM=12;curY--;}
-  filterDate=null; renderAll();
-};
-window.clearFilter=()=>{ filterDate=null; renderAll(); };
-window.shareLink=()=>{
-  navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));
-};
-function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",2200); }
+window.changeMonth=d=>{curM+=d;if(curM>12){curM=1;curY++;}if(curM<1){curM=12;curY--;}filterDate=null;renderAll();};
+window.clearFilter=()=>{filterDate=null;renderAll();};
+window.shareLink=()=>{navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));};
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200);}
 
 const today=new Date();
 document.getElementById("f-start").value=makeDS(today.getFullYear(),today.getMonth()+1,today.getDate());
 document.getElementById("f-end").value=makeDS(today.getFullYear(),today.getMonth()+1,today.getDate());
-buildCatPick(); renderCalendar(); renderStatusRow();
+buildCatPick();renderCalendar();renderStatusRow();
 </script>
 <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');</script>
-<div style="position:fixed;bottom:12px;right:14px;font-size:10px;color:rgba(255,255,255,0.18);font-family:'Noto Sans KR',sans-serif;pointer-events:none;z-index:50;letter-spacing:0.3px">26.04.08. V1_장남규</div>
 </body>
 </html>
