@@ -33,7 +33,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .nav-arrow { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .month-label { font-size: 15px; font-weight: 500; }
 
-.cal-wrap { padding: 1rem 1rem 0.5rem; }
+.cal-wrap { padding: 0.75rem 1rem 0.25rem; }
 .cal-days-header { display: grid; grid-template-columns: repeat(7,1fr); text-align: center; font-size: 11px; color: var(--text2); margin-bottom: 6px; }
 .cal-days-header span:first-child { color: #ef5350; }
 .cal-days-header span:last-child { color: var(--accent); }
@@ -58,8 +58,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .status-badge.active { opacity: 1; }
 
 /* Date panel */
-.date-panel { margin: 0.5rem 1rem 0.25rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-.date-panel-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.date-panel { margin: 0 1rem 0.5rem; background: var(--surface); border-radius: var(--radius); border: 1px solid rgba(79,195,247,0.35); overflow: hidden; }
+.date-panel-header { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .date-panel-title { font-size: 13px; font-weight: 500; color: var(--accent); }
 .date-panel-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 16px; padding: 0; }
 .date-panel-body { padding: 6px 10px; }
@@ -155,9 +155,10 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <div class="cat-pick" id="cat-pick"></div>
     <label class="form-label">일정 제목 *</label>
     <input class="form-input" id="f-title" placeholder="예: A물질 합성 반응, 세척 및 점검..." />
-    <div class="form-row">
-      <div><label class="form-label">시작일 *</label><input class="form-input" type="date" id="f-start" /></div>
-      <div><label class="form-label">종료일 *</label><input class="form-input" type="date" id="f-end" /></div>
+    <div style="display:flex;gap:8px;align-items:flex-end">
+      <div style="flex:1;min-width:0"><label class="form-label">시작일 *</label><input class="form-input" type="date" id="f-start" style="font-size:12px;padding:9px 6px" /></div>
+      <div style="padding-bottom:10px;color:var(--text2);font-size:13px">~</div>
+      <div style="flex:1;min-width:0"><label class="form-label">종료일 *</label><input class="form-input" type="date" id="f-end" style="font-size:12px;padding:9px 6px" /></div>
     </div>
     <div class="form-row">
       <div><label class="form-label">담당자</label><input class="form-input" id="f-who" placeholder="이름" /></div>
@@ -328,6 +329,7 @@ function renderDatePanel(){
   const holidayStr=HOLIDAYS[filterDate]?` · ${HOLIDAYS[filterDate]}`:"";
   document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})${holidayStr}`;
   panel.style.display="block";
+  setTimeout(()=>panel.scrollIntoView({behavior:"smooth",block:"nearest"}),50);
   const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
   const body=document.getElementById("date-panel-body");
   if(!evs.length){body.innerHTML='<div class="date-empty">이 날 일정이 없습니다</div>';return;}
