@@ -220,6 +220,26 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div id="syn-list"></div>
 </div>
 
+<!-- 합성예정 수정 모달 -->
+<div class="modal-bg" id="syn-edit-modal" style="display:none" onclick="if(event.target===this)closeSynEdit()">
+  <div class="modal">
+    <div class="modal-title">합성 예정 수정</div>
+    <label class="form-label">물질명/제품명</label><input class="form-input" id="es-name" />
+    <div class="form-row">
+      <div><label class="form-label">목표 수량</label><input class="form-input" id="es-qty" /></div>
+      <div><label class="form-label">담당자</label><input class="form-input" id="es-who" /></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">예상 일정</label><input class="form-input" id="es-date" /></div>
+      <div><label class="form-label">메모</label><input class="form-input" id="es-memo" /></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeSynEdit()">취소</button>
+      <button class="modal-save" onclick="saveSynEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
 <div class="watermark">26.04.08. V1_장남규</div>
 <div class="toast" id="toast"></div>
 
@@ -286,7 +306,7 @@ const CATS = [
 
 let selCat=CATS[0], editSelCat=CATS[0], editId=null;
 let curY=new Date().getFullYear(), curM=new Date().getMonth()+1;
-let filterDate=null, allEvents=[];
+let filterDate=null, allEvents=[], allSyn=[];
 
 const pad=n=>String(n).padStart(2,"0");
 const makeDS=(y,m,d)=>`${y}-${pad(m)}-${pad(d)}`;
@@ -477,7 +497,8 @@ window.switchTab=tab=>{
 
 // 합성 예정
 onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
-  const items=snap.docs.map(d=>({id:d.id,...d.data()}));
+  allSyn=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const items=allSyn;
   const list=document.getElementById("syn-list");
   const count=document.getElementById("syn-count");
   count.textContent=items.length?`${items.length}건`:"";
@@ -485,8 +506,11 @@ onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
   list.innerHTML=items.map(it=>`
     <div style="background:var(--surface);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-left:3px solid var(--accent)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <span style="font-size:14px;font-weight:500">${it.name}</span>
-        <button onclick="window._delSyn('${it.id}')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;padding:0 2px">✕</button>
+        <span style="font-size:14px;font-weight:500;flex:1">${it.name}</span>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <button onclick="window._openEditSyn('${it.id}')" style="background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.3);color:var(--accent);border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">수정</button>
+          <button onclick="window._delSyn('${it.id}')" style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.3);color:#ef5350;border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">삭제</button>
+        </div>
       </div>
       <div style="font-size:11px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap">
         ${it.qty?`<span>목표: ${it.qty}</span>`:""}
@@ -511,6 +535,32 @@ window.addSyn=async()=>{
   document.getElementById("s-date").value="";
   document.getElementById("s-memo").value="";
   showToast("항목 추가됐습니다 ✓");
+};
+
+let editSynId=null;
+window._openEditSyn=id=>{
+  const it=allSyn.find(s=>s.id===id); if(!it)return;
+  editSynId=id;
+  document.getElementById("es-name").value=it.name||"";
+  document.getElementById("es-qty").value=it.qty||"";
+  document.getElementById("es-who").value=it.who||"";
+  document.getElementById("es-date").value=it.date||"";
+  document.getElementById("es-memo").value=it.memo||"";
+  document.getElementById("syn-edit-modal").style.display="flex";
+};
+window.closeSynEdit=()=>{document.getElementById("syn-edit-modal").style.display="none";editSynId=null;};
+window.saveSynEdit=async()=>{
+  if(!editSynId)return;
+  const name=document.getElementById("es-name").value.trim();
+  if(!name){showToast("물질명을 입력해주세요");return;}
+  await updateDoc(doc(db,"synthesis",editSynId),{
+    name,
+    qty:document.getElementById("es-qty").value.trim(),
+    who:document.getElementById("es-who").value.trim(),
+    date:document.getElementById("es-date").value.trim(),
+    memo:document.getElementById("es-memo").value.trim(),
+  });
+  closeSynEdit(); showToast("수정됐습니다 ✓");
 };
 window._delSyn=async id=>{
   if(!confirm("이 항목을 삭제할까요?"))return;
