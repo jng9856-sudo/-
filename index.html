@@ -190,6 +190,26 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   </div>
 </div>
 
+<!-- 합성 예정 섹션 -->
+<div style="padding:0 1rem 2rem">
+  <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:10px;margin-top:0.5rem;display:flex;align-items:center;gap:8px">
+    <span>합성 예정 목록</span>
+    <span id="syn-count" style="font-size:11px;background:rgba(79,195,247,0.15);color:var(--accent);border-radius:20px;padding:1px 8px"></span>
+  </div>
+  <div style="background:var(--surface);border-radius:var(--radius);padding:1rem;border:1px solid var(--border);margin-bottom:10px">
+    <div class="form-row" style="margin-bottom:8px">
+      <div><label class="form-label">물질명/제품명 *</label><input class="form-input" id="s-name" placeholder="예: MEA Triazine" style="margin-bottom:0" /></div>
+      <div><label class="form-label">목표 수량</label><input class="form-input" id="s-qty" placeholder="예: 500kg" style="margin-bottom:0" /></div>
+    </div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div><label class="form-label">담당자</label><input class="form-input" id="s-who" placeholder="이름" style="margin-bottom:0" /></div>
+      <div><label class="form-label">예상 일정</label><input class="form-input" id="s-date" placeholder="예: 2026년 5월" style="margin-bottom:0" /></div>
+    </div>
+    <button class="submit-btn" onclick="addSyn()" style="background:rgba(79,195,247,0.15);color:var(--accent);border:1px solid rgba(79,195,247,0.3)">+ 항목 추가</button>
+  </div>
+  <div id="syn-list"></div>
+</div>
+
 <div class="watermark">26.04.08. V1_장남규</div>
 <div class="toast" id="toast"></div>
 
@@ -209,6 +229,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const col = collection(db, "events");
+const synCol = collection(db, "synthesis");
 
 // 한국 공휴일 (2024~2027)
 const HOLIDAYS = {
@@ -425,6 +446,45 @@ window.changeMonth=d=>{curM+=d;if(curM>12){curM=1;curY++;}if(curM<1){curM=12;cur
 window.clearFilter=()=>{filterDate=null;renderAll();};
 window.shareLink=()=>{navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));};
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200);}
+
+// 합성 예정
+onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
+  const items=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const list=document.getElementById("syn-list");
+  const count=document.getElementById("syn-count");
+  count.textContent=items.length?`${items.length}건`:"";
+  if(!items.length){list.innerHTML=`<div style="text-align:center;padding:1.5rem 0;color:var(--text2);font-size:13px">등록된 항목이 없습니다</div>`;return;}
+  list.innerHTML=items.map(it=>`
+    <div style="background:var(--surface);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-left:3px solid var(--accent)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:14px;font-weight:500">${it.name}</span>
+        <button onclick="window._delSyn('${it.id}')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;padding:0 2px">✕</button>
+      </div>
+      <div style="font-size:11px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap">
+        ${it.qty?`<span>목표: ${it.qty}</span>`:""}
+        ${it.who?`<span>담당: ${it.who}</span>`:""}
+        ${it.date?`<span>일정: ${it.date}</span>`:""}
+      </div>
+    </div>`).join("");
+});
+
+window.addSyn=async()=>{
+  const name=document.getElementById("s-name").value.trim();
+  if(!name){showToast("물질명을 입력해주세요");return;}
+  const qty=document.getElementById("s-qty").value.trim();
+  const who=document.getElementById("s-who").value.trim();
+  const date=document.getElementById("s-date").value.trim();
+  await addDoc(synCol,{name,qty,who,date,createdAt:Date.now()});
+  document.getElementById("s-name").value="";
+  document.getElementById("s-qty").value="";
+  document.getElementById("s-who").value="";
+  document.getElementById("s-date").value="";
+  showToast("항목 추가됐습니다 ✓");
+};
+window._delSyn=async id=>{
+  if(!confirm("이 항목을 삭제할까요?"))return;
+  await deleteDoc(doc(db,"synthesis",id));showToast("삭제됐습니다");
+};
 
 const today=new Date();
 document.getElementById("f-start").value=makeDS(today.getFullYear(),today.getMonth()+1,today.getDate());
