@@ -1,0 +1,17 @@
+{
+  "name": "Green Chem 팀 일정표",
+  "short_name": "팀 일정표",
+  "description": "Green Chem 팀 일정 공유 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#4fc3f7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231a1a2e' rx='24'/><text y='130' x='50%' font-size='110' text-anchor='middle'>📅</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
