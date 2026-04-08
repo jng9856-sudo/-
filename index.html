@@ -44,49 +44,65 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .day-cell.today .day-num { background: var(--accent); color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
 .day-cell.other-month .day-num { color: rgba(255,255,255,0.18); }
 .day-num { font-size: 13px; font-weight: 400; line-height: 24px; width: 24px; text-align: center; }
-.dot-row { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; max-width: 100%; }
+.dot-row { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; }
 .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
-/* Date detail panel */
-.date-panel { margin: 0 1rem 0.75rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+/* Status badges */
+.status-wrap { padding: 0.5rem 1rem 0.25rem; }
+.status-label { font-size: 10px; color: var(--text2); margin-bottom: 5px; }
+.status-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.status-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; opacity: 0.22; transition: opacity 0.2s; }
+.status-badge.active { opacity: 1; }
+
+/* Date panel */
+.date-panel { margin: 0.5rem 1rem 0.25rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
 .date-panel-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .date-panel-title { font-size: 13px; font-weight: 500; color: var(--accent); }
 .date-panel-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 16px; padding: 0; }
-.date-panel-body { padding: 10px 14px; }
-.date-ev-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.date-panel-body { padding: 6px 10px; }
+.date-ev-item { display: flex; align-items: center; gap: 8px; padding: 8px 4px; border-bottom: 1px solid var(--border); }
 .date-ev-item:last-child { border-bottom: none; }
 .date-ev-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
-.date-ev-info { flex: 1; }
-.date-ev-title { font-size: 13px; font-weight: 500; }
+.date-ev-info { flex: 1; min-width: 0; }
+.date-ev-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .date-ev-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
-.date-empty { font-size: 13px; color: var(--text2); text-align: center; padding: 0.5rem 0; }
+.date-ev-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.date-ev-edit { background: rgba(79,195,247,0.12); border: 1px solid rgba(79,195,247,0.3); color: var(--accent); border-radius: 8px; font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: inherit; }
+.date-ev-edit:hover { background: rgba(79,195,247,0.22); }
+.date-ev-del { background: rgba(239,83,80,0.12); border: 1px solid rgba(239,83,80,0.3); color: #ef5350; border-radius: 8px; font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: inherit; }
+.date-ev-del:hover { background: rgba(239,83,80,0.22); }
+.date-empty { font-size: 13px; color: var(--text2); text-align: center; padding: 1rem 0; }
 
-/* Status badges row */
-.status-row { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 1rem 0.75rem; }
-.status-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; opacity: 0.4; }
-.status-badge.active { opacity: 1; }
+/* Edit modal */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
+.modal { background: var(--surface); border-radius: var(--radius) var(--radius) 0 0; padding: 1.25rem 1rem 2rem; width: 100%; max-width: 520px; border-top: 1px solid var(--border); }
+.modal-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; }
+.modal-btns { display: flex; gap: 8px; margin-top: 4px; }
+.modal-cancel { flex: 1; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--text2); padding: 11px; font-size: 14px; cursor: pointer; font-family: inherit; }
+.modal-save { flex: 2; background: var(--accent); border: none; border-radius: 10px; color: #000; padding: 11px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
-.section { padding: 0 1rem 1rem; }
+/* Add form */
+.section { padding: 0.5rem 1rem 1rem; }
 .add-form { background: var(--surface); border-radius: var(--radius); padding: 1rem; border: 1px solid var(--border); }
 .form-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; display: block; }
 .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 14px; padding: 10px 12px; margin-bottom: 10px; outline: none; transition: border-color 0.2s; }
 .form-input:focus { border-color: var(--accent); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.cat-pick { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.cpick { padding: 5px 11px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 700; border: 2px solid transparent; transition: all 0.15s; opacity: 0.4; }
+.cat-pick { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.cpick { padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 700; border: 2px solid transparent; transition: all 0.15s; opacity: 0.4; }
 .cpick.on { opacity: 1; border-color: white; transform: scale(1.08); }
 .submit-btn { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.submit-btn:hover { opacity: 0.85; }
 
+/* Comments */
+.section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 10px; margin-top: 1rem; }
 .event-card { background: var(--surface); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--border); border-left: 3px solid; }
 .ev-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .ev-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
 .ev-title { font-size: 14px; font-weight: 500; flex: 1; }
-.ev-del { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; }
 .ev-meta { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
 .ev-memo { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-style: italic; }
 .comments { border-top: 1px solid var(--border); padding-top: 8px; }
-.comment-item { font-size: 12px; color: var(--text2); padding: 4px 4px 4px 10px; border-left: 2px solid var(--border); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.comment-item { font-size: 12px; color: var(--text2); padding: 4px 4px 4px 10px; border-left: 2px solid var(--border); margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
 .comment-text { flex: 1; }
 .comment-del { background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; font-size: 12px; padding: 0; transition: color 0.15s; }
 .comment-del:hover { color: #ef5350; }
@@ -94,9 +110,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .comment-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 12px; padding: 6px 10px; outline: none; }
 .comment-btn { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-size: 12px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
 
-.section-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 10px; margin-top: 1rem; }
 .empty { text-align: center; padding: 2rem 0; color: var(--text2); font-size: 13px; }
-.loading { text-align: center; padding: 2rem; color: var(--text2); font-size: 13px; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700; display: none; z-index: 999; white-space: nowrap; }
 </style>
 </head>
@@ -121,7 +135,13 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div class="cal-grid" id="cal-grid"></div>
 </div>
 
-<!-- 날짜 클릭시 상세 패널 -->
+<!-- 반응기 현황 -->
+<div class="status-wrap">
+  <div class="status-label" id="status-label">오늘 가동 현황</div>
+  <div class="status-row" id="status-row"></div>
+</div>
+
+<!-- 날짜 클릭 패널 -->
 <div class="date-panel" id="date-panel" style="display:none">
   <div class="date-panel-header">
     <span class="date-panel-title" id="date-panel-title"></span>
@@ -130,9 +150,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div class="date-panel-body" id="date-panel-body"></div>
 </div>
 
-<!-- 오늘 기준 반응기 현황 -->
-<div class="status-row" id="status-row"></div>
-
+<!-- 추가 폼 -->
 <div class="section">
   <div class="add-form">
     <div class="form-label">반응기 선택 *</div>
@@ -161,9 +179,30 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     </div>
     <button class="submit-btn" onclick="addEvent()">+ 일정 추가</button>
   </div>
-
-  <div class="section-title" id="list-title" style="display:none"></div>
   <div id="events-list"></div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal-bg" id="edit-modal" style="display:none" onclick="if(event.target===this)closeEdit()">
+  <div class="modal">
+    <div class="modal-title">일정 수정</div>
+    <div class="form-label">반응기</div>
+    <div class="cat-pick" id="edit-cat-pick" style="margin-bottom:12px"></div>
+    <label class="form-label">제목</label>
+    <input class="form-input" id="e-title" />
+    <div class="form-row">
+      <div><label class="form-label">시작일</label><input class="form-input" type="date" id="e-start" /></div>
+      <div><label class="form-label">종료일</label><input class="form-input" type="date" id="e-end" /></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">담당자</label><input class="form-input" id="e-who" /></div>
+      <div><label class="form-label">메모</label><input class="form-input" id="e-memo" /></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeEdit()">취소</button>
+      <button class="modal-save" onclick="saveEdit()">저장</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -198,6 +237,8 @@ const CATS = [
 ];
 
 let selCat = CATS[0];
+let editSelCat = CATS[0];
+let editId = null;
 let curY = new Date().getFullYear();
 let curM = new Date().getMonth() + 1;
 let filterDate = null;
@@ -205,163 +246,140 @@ let allEvents = [];
 
 const pad = n => String(n).padStart(2,"0");
 const makeDS = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
+const todayDS = () => { const t=new Date(); return makeDS(t.getFullYear(),t.getMonth()+1,t.getDate()); };
 
 function dateRange(start, end) {
-  const dates = [];
-  let cur = new Date(start + "T00:00:00");
-  const endD = new Date(end + "T00:00:00");
-  while (cur <= endD) {
-    dates.push(makeDS(cur.getFullYear(), cur.getMonth()+1, cur.getDate()));
-    cur.setDate(cur.getDate()+1);
-  }
+  const dates=[], endD=new Date(end+"T00:00:00");
+  let cur=new Date(start+"T00:00:00");
+  while(cur<=endD){ dates.push(makeDS(cur.getFullYear(),cur.getMonth()+1,cur.getDate())); cur.setDate(cur.getDate()+1); }
   return dates;
 }
 
 function buildCatPick() {
-  const cp = document.getElementById("cat-pick");
-  cp.innerHTML = "";
-  CATS.forEach((c,i) => {
-    const d = document.createElement("div");
-    d.className = "cpick"+(i===0?" on":"");
-    d.style.background = c.color;
-    d.style.color = c.text;
-    d.textContent = c.id;
-    d.onclick = () => {
-      document.querySelectorAll(".cpick").forEach(x=>x.classList.remove("on"));
-      d.classList.add("on");
-      selCat = c;
-    };
+  const cp=document.getElementById("cat-pick"); cp.innerHTML="";
+  CATS.forEach((c,i)=>{
+    const d=document.createElement("div");
+    d.className="cpick"+(i===0?" on":""); d.style.background=c.color; d.style.color=c.text; d.textContent=c.id;
+    d.onclick=()=>{ document.querySelectorAll("#cat-pick .cpick").forEach(x=>x.classList.remove("on")); d.classList.add("on"); selCat=c; };
     cp.appendChild(d);
   });
 }
 
+function buildEditCatPick(currentCat) {
+  const cp=document.getElementById("edit-cat-pick"); cp.innerHTML="";
+  CATS.forEach(c=>{
+    const d=document.createElement("div");
+    d.className="cpick"+(c.id===currentCat?" on":""); d.style.background=c.color; d.style.color=c.text; d.textContent=c.id;
+    d.onclick=()=>{ document.querySelectorAll("#edit-cat-pick .cpick").forEach(x=>x.classList.remove("on")); d.classList.add("on"); editSelCat=c; };
+    cp.appendChild(d);
+    if(c.id===currentCat) editSelCat=c;
+  });
+}
+
 function renderStatusRow() {
-  const today = makeDS(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate());
-  const activeIds = new Set(allEvents.filter(e=>dateRange(e.start,e.end).includes(today)).map(e=>e.cat));
-  const row = document.getElementById("status-row");
-  row.innerHTML = CATS.map(c =>
+  // 선택된 날짜 있으면 그 날짜 기준, 없으면 오늘 기준
+  const checkDate = filterDate || todayDS();
+  const activeIds = new Set(allEvents.filter(e=>dateRange(e.start,e.end).includes(checkDate)).map(e=>e.cat));
+  const label = document.getElementById("status-label");
+  label.textContent = filterDate ? `${filterDate} 가동 현황` : "오늘 가동 현황";
+  document.getElementById("status-row").innerHTML = CATS.map(c=>
     `<span class="status-badge${activeIds.has(c.id)?" active":""}" style="background:${c.color};color:${c.text}">${c.id}</span>`
   ).join("");
 }
 
 function renderCalendar() {
-  const grid = document.getElementById("cal-grid");
-  const today = new Date();
-  const firstDay = new Date(curY, curM-1, 1).getDay();
-  const daysInMonth = new Date(curY, curM, 0).getDate();
-  const prevDays = new Date(curY, curM-1, 0).getDate();
-  document.getElementById("month-label").textContent = `${curY}년 ${curM}월`;
-  grid.innerHTML = "";
+  const grid=document.getElementById("cal-grid");
+  const today=new Date();
+  const firstDay=new Date(curY,curM-1,1).getDay();
+  const daysInMonth=new Date(curY,curM,0).getDate();
+  const prevDays=new Date(curY,curM-1,0).getDate();
+  document.getElementById("month-label").textContent=`${curY}년 ${curM}월`;
+  grid.innerHTML="";
 
-  const addCell = (d, ds, other, isToday) => {
-    const cell = document.createElement("div");
-    cell.className = "day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"");
-    const evs = allEvents.filter(e=>dateRange(e.start,e.end).includes(ds));
-    const uniq = [...new Map(evs.map(e=>[e.color,e])).values()].slice(0,5);
-    const dots = uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("");
-    cell.innerHTML = `<div class="day-num">${d}</div><div class="dot-row">${dots}</div>`;
-    cell.onclick = () => { filterDate = filterDate===ds?null:ds; renderAll(); };
+  const addCell=(d,ds,other,isToday)=>{
+    const cell=document.createElement("div");
+    cell.className="day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"");
+    const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(ds));
+    const uniq=[...new Map(evs.map(e=>[e.color,e])).values()].slice(0,5);
+    cell.innerHTML=`<div class="day-num">${d}</div><div class="dot-row">${uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("")}</div>`;
+    cell.onclick=()=>{ filterDate=filterDate===ds?null:ds; renderAll(); };
     grid.appendChild(cell);
   };
 
-  for (let i=0;i<firstDay;i++) {
-    const d=prevDays-firstDay+1+i, m=curM===1?12:curM-1, y=curM===1?curY-1:curY;
-    addCell(d,makeDS(y,m,d),true,false);
-  }
-  for (let d=1;d<=daysInMonth;d++) {
-    const ds=makeDS(curY,curM,d);
-    const isToday=today.getFullYear()===curY&&today.getMonth()+1===curM&&today.getDate()===d;
-    addCell(d,ds,false,isToday);
-  }
+  for(let i=0;i<firstDay;i++){ const d=prevDays-firstDay+1+i,m=curM===1?12:curM-1,y=curM===1?curY-1:curY; addCell(d,makeDS(y,m,d),true,false); }
+  for(let d=1;d<=daysInMonth;d++){ const ds=makeDS(curY,curM,d); addCell(d,ds,false,today.getFullYear()===curY&&today.getMonth()+1===curM&&today.getDate()===d); }
   const rem=42-firstDay-daysInMonth;
-  for (let d=1;d<=rem;d++) {
-    const m=curM===12?1:curM+1, y=curM===12?curY+1:curY;
-    addCell(d,makeDS(y,m,d),true,false);
-  }
+  for(let d=1;d<=rem;d++){ const m=curM===12?1:curM+1,y=curM===12?curY+1:curY; addCell(d,makeDS(y,m,d),true,false); }
 }
 
 function renderDatePanel() {
-  const panel = document.getElementById("date-panel");
-  const panelTitle = document.getElementById("date-panel-title");
-  const panelBody = document.getElementById("date-panel-body");
-
-  if (!filterDate) { panel.style.display="none"; return; }
-
-  const d = new Date(filterDate+"T00:00:00");
+  const panel=document.getElementById("date-panel");
+  if(!filterDate){ panel.style.display="none"; return; }
+  const d=new Date(filterDate+"T00:00:00");
   const days=["일","월","화","수","목","금","토"];
-  panelTitle.textContent = `${filterDate} (${days[d.getDay()]})`;
-  panel.style.display = "block";
+  document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})`;
+  panel.style.display="block";
 
-  const evs = allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
-  if (!evs.length) {
-    panelBody.innerHTML = '<div class="date-empty">이 날 일정이 없습니다</div>';
-    return;
-  }
-  panelBody.innerHTML = evs.map(ev=>`
+  const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
+  const body=document.getElementById("date-panel-body");
+  if(!evs.length){ body.innerHTML='<div class="date-empty">이 날 일정이 없습니다</div>'; return; }
+  body.innerHTML=evs.map(ev=>`
     <div class="date-ev-item">
       <span class="date-ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span>
       <div class="date-ev-info">
         <div class="date-ev-title">${ev.title}</div>
         <div class="date-ev-meta">${ev.start===ev.end?ev.start:`${ev.start}~${ev.end}`}${ev.who?" · "+ev.who:""}</div>
       </div>
+      <div class="date-ev-actions">
+        <button class="date-ev-edit" onclick="window._openEdit('${ev.id}')">수정</button>
+        <button class="date-ev-del" onclick="window._delEv('${ev.id}')">삭제</button>
+      </div>
     </div>`).join("");
 }
 
 function renderList() {
-  const list = document.getElementById("events-list");
-  const titleEl = document.getElementById("list-title");
-
-  if (filterDate) {
-    const evs = allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
-    if (!evs.length) { list.innerHTML=""; titleEl.style.display="none"; return; }
-    titleEl.style.display="block";
-    titleEl.textContent="일정 상세";
-    list.innerHTML = evs.map(ev=>makeCard(ev)).join("");
-  } else {
-    list.innerHTML=""; titleEl.style.display="none";
-  }
-}
-
-function makeCard(ev) {
-  const dateStr = ev.start===ev.end?ev.start:`${ev.start} ~ ${ev.end}`;
-  const cmts = (ev.comments||[]).map((c,ci)=>
-    `<div class="comment-item">
-      <span class="comment-text">${c}</span>
-      <button class="comment-del" onclick="window._delCmt('${ev.id}',${ci})">✕</button>
-    </div>`).join("");
-  return `<div class="event-card" style="border-left-color:${ev.color}">
-    <div class="ev-header">
-      <span class="ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span>
-      <span class="ev-title">${ev.title}</span>
-      <button class="ev-del" onclick="window._delEv('${ev.id}')">✕</button>
-    </div>
-    <div class="ev-meta">${dateStr}${ev.who?" · "+ev.who:""}</div>
-    ${ev.memo?`<div class="ev-memo">${ev.memo}</div>`:""}
-    <div class="comments">
-      ${cmts}
-      <div class="comment-form">
-        <input class="comment-input" id="cmt-${ev.id}" placeholder="댓글 추가..." onkeydown="if(event.key==='Enter')window._addCmt('${ev.id}',this)"/>
-        <button class="comment-btn" onclick="window._addCmt('${ev.id}',document.getElementById('cmt-${ev.id}'))">등록</button>
+  const list=document.getElementById("events-list");
+  if(!filterDate){ list.innerHTML=""; return; }
+  const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
+  if(!evs.length){ list.innerHTML=""; return; }
+  list.innerHTML=evs.map(ev=>{
+    const dateStr=ev.start===ev.end?ev.start:`${ev.start} ~ ${ev.end}`;
+    const cmts=(ev.comments||[]).map((c,ci)=>
+      `<div class="comment-item"><span class="comment-text">${c}</span><button class="comment-del" onclick="window._delCmt('${ev.id}',${ci})">✕</button></div>`
+    ).join("");
+    return `<div class="event-card" style="border-left-color:${ev.color};margin-top:8px">
+      <div class="ev-header">
+        <span class="ev-badge" style="background:${ev.color};color:${ev.catText||'#000'}">${ev.cat}</span>
+        <span class="ev-title">${ev.title}</span>
       </div>
-    </div>
-  </div>`;
+      <div class="ev-meta">${dateStr}${ev.who?" · "+ev.who:""}</div>
+      ${ev.memo?`<div class="ev-memo">${ev.memo}</div>`:""}
+      <div class="comments">
+        ${cmts}
+        <div class="comment-form">
+          <input class="comment-input" id="cmt-${ev.id}" placeholder="댓글 추가..." onkeydown="if(event.key==='Enter')window._addCmt('${ev.id}',this)"/>
+          <button class="comment-btn" onclick="window._addCmt('${ev.id}',document.getElementById('cmt-${ev.id}'))">등록</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
 }
 
-function renderAll() { renderCalendar(); renderDatePanel(); renderList(); renderStatusRow(); }
+function renderAll(){ renderCalendar(); renderStatusRow(); renderDatePanel(); renderList(); }
 
-onSnapshot(query(col, orderBy("start")), snap => {
-  allEvents = snap.docs.map(d=>({id:d.id,...d.data()}));
+onSnapshot(query(col,orderBy("start")), snap=>{
+  allEvents=snap.docs.map(d=>({id:d.id,...d.data()}));
   renderAll();
 });
 
-window.addEvent = async () => {
+window.addEvent = async()=>{
   const title=document.getElementById("f-title").value.trim();
   const start=document.getElementById("f-start").value;
   const end=document.getElementById("f-end").value;
   const who=document.getElementById("f-who").value.trim();
   const memo=document.getElementById("f-memo").value.trim();
-  if (!title||!start||!end){showToast("제목과 기간을 입력해주세요");return;}
-  if (end<start){showToast("종료일이 시작일보다 빠릅니다");return;}
+  if(!title||!start||!end){showToast("제목과 기간을 입력해주세요");return;}
+  if(end<start){showToast("종료일이 시작일보다 빠릅니다");return;}
   await addDoc(col,{title,start,end,who,memo,color:selCat.color,catText:selCat.text,cat:selCat.id,comments:[],createdAt:Date.now()});
   document.getElementById("f-title").value="";
   document.getElementById("f-who").value="";
@@ -369,37 +387,55 @@ window.addEvent = async () => {
   showToast(`${selCat.id} 일정 추가 완료 ✓`);
 };
 
-window._delEv = async id => {
-  if (!confirm("이 일정을 삭제할까요?")) return;
-  await deleteDoc(doc(db,"events",id));
-  showToast("삭제됐습니다");
+window._openEdit = id=>{
+  const ev=allEvents.find(e=>e.id===id); if(!ev)return;
+  editId=id;
+  buildEditCatPick(ev.cat);
+  document.getElementById("e-title").value=ev.title||"";
+  document.getElementById("e-start").value=ev.start||"";
+  document.getElementById("e-end").value=ev.end||"";
+  document.getElementById("e-who").value=ev.who||"";
+  document.getElementById("e-memo").value=ev.memo||"";
+  document.getElementById("edit-modal").style.display="flex";
 };
-window._addCmt = async (id,input) => {
+
+window.closeEdit=()=>{ document.getElementById("edit-modal").style.display="none"; editId=null; };
+
+window.saveEdit=async()=>{
+  if(!editId)return;
+  const title=document.getElementById("e-title").value.trim();
+  const start=document.getElementById("e-start").value;
+  const end=document.getElementById("e-end").value;
+  const who=document.getElementById("e-who").value.trim();
+  const memo=document.getElementById("e-memo").value.trim();
+  if(!title||!start||!end){showToast("제목과 기간을 입력해주세요");return;}
+  if(end<start){showToast("종료일이 시작일보다 빠릅니다");return;}
+  await updateDoc(doc(db,"events",editId),{title,start,end,who,memo,color:editSelCat.color,catText:editSelCat.text,cat:editSelCat.id});
+  closeEdit(); showToast("수정됐습니다 ✓");
+};
+
+window._delEv=async id=>{
+  if(!confirm("이 일정을 삭제할까요?"))return;
+  await deleteDoc(doc(db,"events",id)); showToast("삭제됐습니다");
+};
+window._addCmt=async(id,input)=>{
   const val=input.value.trim(); if(!val)return;
   const ev=allEvents.find(e=>e.id===id); if(!ev)return;
-  await updateDoc(doc(db,"events",id),{comments:[...(ev.comments||[]),val]});
-  input.value="";
+  await updateDoc(doc(db,"events",id),{comments:[...(ev.comments||[]),val]}); input.value="";
 };
-window._delCmt = async (id,idx) => {
+window._delCmt=async(id,idx)=>{
   const ev=allEvents.find(e=>e.id===id); if(!ev)return;
   await updateDoc(doc(db,"events",id),{comments:(ev.comments||[]).filter((_,i)=>i!==idx)});
 };
-window.changeMonth = d => {
-  curM+=d;
-  if(curM>12){curM=1;curY++;} if(curM<1){curM=12;curY--;}
+window.changeMonth=d=>{
+  curM+=d; if(curM>12){curM=1;curY++;} if(curM<1){curM=12;curY--;}
   filterDate=null; renderAll();
 };
-window.clearFilter = () => { filterDate=null; renderAll(); };
-window.shareLink = () => {
-  navigator.clipboard.writeText(window.location.href)
-    .then(()=>showToast("링크 복사됐습니다!"))
-    .catch(()=>showToast(window.location.href));
+window.clearFilter=()=>{ filterDate=null; renderAll(); };
+window.shareLink=()=>{
+  navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));
 };
-function showToast(msg) {
-  const t=document.getElementById("toast");
-  t.textContent=msg; t.style.display="block";
-  setTimeout(()=>t.style.display="none",2200);
-}
+function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",2200); }
 
 const today=new Date();
 document.getElementById("f-start").value=makeDS(today.getFullYear(),today.getMonth()+1,today.getDate());
