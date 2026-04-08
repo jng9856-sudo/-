@@ -266,6 +266,9 @@ const HOLIDAYS = {
   "2027-12-25":"크리스마스"
 };
 
+const CAT_ORDER=["LR1","LR2","LR3","LR4","PR1","PR2","PR3","PR4","PR5","PR6","철야"];
+const sortByCat=arr=>[...arr].sort((a,b)=>CAT_ORDER.indexOf(a.cat)-CAT_ORDER.indexOf(b.cat));
+
 const CATS = [
   { id:"LR1", color:"#4fc3f7", text:"#000" },
   { id:"LR2", color:"#81c784", text:"#000" },
@@ -362,7 +365,7 @@ function renderDatePanel(){
   document.getElementById("date-panel-title").textContent=`${filterDate} (${days[d.getDay()]})${holidayStr}`;
   panel.style.display="block";
   setTimeout(()=>panel.scrollIntoView({behavior:"smooth",block:"nearest"}),50);
-  const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
+  const evs=sortByCat(allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate)));
   const body=document.getElementById("date-panel-body");
   if(!evs.length){body.innerHTML='<div class="date-empty">이 날 일정이 없습니다</div>';return;}
   body.innerHTML=evs.map(ev=>`
@@ -382,7 +385,7 @@ function renderDatePanel(){
 function renderList(){
   const list=document.getElementById("events-list");
   if(!filterDate){list.innerHTML="";return;}
-  const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate));
+  const evs=sortByCat(allEvents.filter(e=>dateRange(e.start,e.end).includes(filterDate)));
   if(!evs.length){list.innerHTML="";return;}
   list.innerHTML=evs.map(ev=>{
     const dateStr=ev.start===ev.end?ev.start:`${ev.start} ~ ${ev.end}`;
