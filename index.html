@@ -364,7 +364,7 @@ function renderCalendar(){
     const isSun=new Date(ds+"T00:00:00").getDay()===0;
     cell.className="day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"")+((isHoliday||isSun)&&!other?" holiday":"");
     const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(ds));
-    const uniq=[...new Map(evs.map(e=>[e.cat,e])).values()];
+    const uniq=[...new Map(evs.map(e=>[e.cat,e])).values()].sort((a,b)=>CAT_ORDER.indexOf(a.cat)-CAT_ORDER.indexOf(b.cat));
     const holidayName=HOLIDAYS[ds]?`<div class="holiday-name">${HOLIDAYS[ds]}</div>`:"";
     cell.innerHTML=`<div class="day-num">${d}</div>${holidayName}<div class="dot-row">${uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("")}</div>`;
     cell.onclick=()=>{filterDate=filterDate===ds?null:ds;renderAll();};
