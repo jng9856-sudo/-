@@ -122,13 +122,20 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <div class="app-title">Greenchem <span>Pilot</span> 일정표</div>
     <button class="share-btn" onclick="shareLink()">링크 공유</button>
   </div>
-  <div class="month-nav">
+  <!-- 탭 -->
+  <div style="display:flex;gap:0;margin-top:0.75rem;border-bottom:1px solid var(--border)">
+    <button id="tab-schedule" onclick="switchTab('schedule')" style="flex:1;background:none;border:none;color:var(--accent);font-family:inherit;font-size:13px;font-weight:700;padding:8px 0;border-bottom:2px solid var(--accent);cursor:pointer">📅 일정표</button>
+    <button id="tab-syn" onclick="switchTab('syn')" style="flex:1;background:none;border:none;color:var(--text2);font-family:inherit;font-size:13px;font-weight:500;padding:8px 0;border-bottom:2px solid transparent;cursor:pointer">🧪 합성 예정</button>
+  </div>
+  <!-- 월 네비 (일정표 탭에서만) -->
+  <div class="month-nav" id="month-nav-wrap" style="margin-top:0.75rem">
     <button class="nav-arrow" onclick="changeMonth(-1)">&#8249;</button>
     <span class="month-label" id="month-label"></span>
     <button class="nav-arrow" onclick="changeMonth(1)">&#8250;</button>
   </div>
 </div>
 
+<div id="page-schedule">
 <div class="cal-wrap">
   <div class="cal-days-header">
     <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
@@ -190,9 +197,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   </div>
 </div>
 
-<!-- 합성 예정 섹션 -->
-<div style="padding:0 1rem 2rem">
-  <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:10px;margin-top:0.5rem;display:flex;align-items:center;gap:8px">
+</div><!-- /page-schedule -->
+
+<!-- 합성 예정 탭 -->
+<div id="page-syn" style="display:none;padding:1rem 1rem 2rem">
+  <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:8px">
     <span>합성 예정 목록</span>
     <span id="syn-count" style="font-size:11px;background:rgba(79,195,247,0.15);color:var(--accent);border-radius:20px;padding:1px 8px"></span>
   </div>
@@ -446,6 +455,21 @@ window.changeMonth=d=>{curM+=d;if(curM>12){curM=1;curY++;}if(curM<1){curM=12;cur
 window.clearFilter=()=>{filterDate=null;renderAll();};
 window.shareLink=()=>{navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));};
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200);}
+
+window.switchTab=tab=>{
+  const isSched=tab==='schedule';
+  document.getElementById("page-schedule").style.display=isSched?"block":"none";
+  document.getElementById("page-syn").style.display=isSched?"none":"block";
+  document.getElementById("month-nav-wrap").style.display=isSched?"flex":"none";
+  const tS=document.getElementById("tab-schedule");
+  const tN=document.getElementById("tab-syn");
+  tS.style.color=isSched?"var(--accent)":"var(--text2)";
+  tS.style.borderBottom=isSched?"2px solid var(--accent)":"2px solid transparent";
+  tS.style.fontWeight=isSched?"700":"500";
+  tN.style.color=isSched?"var(--text2)":"var(--accent)";
+  tN.style.borderBottom=isSched?"2px solid transparent":"2px solid var(--accent)";
+  tN.style.fontWeight=isSched?"500":"700";
+};
 
 // 합성 예정
 onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
