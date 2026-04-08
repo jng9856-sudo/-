@@ -38,7 +38,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .cal-days-header span:first-child { color: #ef5350; }
 .cal-days-header span:last-child { color: var(--accent); }
 .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
-.day-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; padding: 3px 2px 2px; border-radius: 10px; cursor: pointer; transition: background 0.15s; position: relative; }
+.day-cell { min-height: 54px; display: flex; flex-direction: column; align-items: center; padding: 3px 2px 3px; border-radius: 10px; cursor: pointer; transition: background 0.15s; position: relative; }
 .day-cell:hover { background: rgba(255,255,255,0.05); }
 .day-cell.selected { background: rgba(79,195,247,0.15); outline: 1.5px solid rgba(79,195,247,0.5); }
 .day-cell.today .day-num { background: var(--accent); color: #000; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
@@ -47,7 +47,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .day-cell.today.holiday .day-num { background: #ef5350; color: #fff !important; }
 .day-num { font-size: 12px; font-weight: 400; line-height: 22px; width: 22px; text-align: center; }
 .holiday-name { font-size: 7px; color: #ef5350; text-align: center; line-height: 1; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 1px; }
-.dot-row { display: flex; gap: 2px; margin-top: 1px; flex-wrap: wrap; justify-content: center; }
+.dot-row { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; max-width: 32px; }
 .dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
 
 /* Status */
@@ -164,7 +164,6 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <input class="form-input" id="f-title" placeholder="예: A물질 합성 반응, 세척 및 점검..." />
     <div style="display:flex;gap:8px;align-items:flex-end">
       <div style="flex:1;min-width:0"><label class="form-label">시작일 *</label><input class="form-input" type="date" id="f-start" style="font-size:12px;padding:9px 6px" /></div>
-      <div style="padding-bottom:10px;color:var(--text2);font-size:13px">~</div>
       <div style="flex:1;min-width:0"><label class="form-label">종료일 *</label><input class="form-input" type="date" id="f-end" style="font-size:12px;padding:9px 6px" /></div>
     </div>
     <div class="form-row">
@@ -214,6 +213,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
       <div><label class="form-label">담당자</label><input class="form-input" id="s-who" placeholder="이름" style="margin-bottom:0" /></div>
       <div><label class="form-label">예상 일정</label><input class="form-input" id="s-date" placeholder="예: 2026년 5월" style="margin-bottom:0" /></div>
     </div>
+    <label class="form-label">메모</label>
+    <input class="form-input" id="s-memo" placeholder="특이사항, 참고내용..." style="margin-bottom:10px" />
     <button class="submit-btn" onclick="addSyn()" style="background:rgba(79,195,247,0.15);color:var(--accent);border:1px solid rgba(79,195,247,0.3)">+ 항목 추가</button>
   </div>
   <div id="syn-list"></div>
@@ -343,7 +344,7 @@ function renderCalendar(){
     const isSun=new Date(ds+"T00:00:00").getDay()===0;
     cell.className="day-cell"+(other?" other-month":"")+(isToday?" today":"")+(filterDate===ds?" selected":"")+((isHoliday||isSun)&&!other?" holiday":"");
     const evs=allEvents.filter(e=>dateRange(e.start,e.end).includes(ds));
-    const uniq=[...new Map(evs.map(e=>[e.color,e])).values()].slice(0,5);
+    const uniq=[...new Map(evs.map(e=>[e.cat,e])).values()];
     const holidayName=HOLIDAYS[ds]?`<div class="holiday-name">${HOLIDAYS[ds]}</div>`:"";
     cell.innerHTML=`<div class="day-num">${d}</div>${holidayName}<div class="dot-row">${uniq.map(e=>`<div class="dot" style="background:${e.color}"></div>`).join("")}</div>`;
     cell.onclick=()=>{filterDate=filterDate===ds?null:ds;renderAll();};
@@ -492,6 +493,7 @@ onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
         ${it.who?`<span>담당: ${it.who}</span>`:""}
         ${it.date?`<span>일정: ${it.date}</span>`:""}
       </div>
+      ${it.memo?`<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic">${it.memo}</div>`:""}
     </div>`).join("");
 });
 
@@ -501,11 +503,13 @@ window.addSyn=async()=>{
   const qty=document.getElementById("s-qty").value.trim();
   const who=document.getElementById("s-who").value.trim();
   const date=document.getElementById("s-date").value.trim();
-  await addDoc(synCol,{name,qty,who,date,createdAt:Date.now()});
+  const memo=document.getElementById("s-memo").value.trim();
+  await addDoc(synCol,{name,qty,who,date,memo,createdAt:Date.now()});
   document.getElementById("s-name").value="";
   document.getElementById("s-qty").value="";
   document.getElementById("s-who").value="";
   document.getElementById("s-date").value="";
+  document.getElementById("s-memo").value="";
   showToast("항목 추가됐습니다 ✓");
 };
 window._delSyn=async id=>{
