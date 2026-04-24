@@ -205,6 +205,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <span id="syn-count" style="font-size:11px;background:rgba(79,195,247,0.15);color:var(--accent);border-radius:20px;padding:1px 8px"></span>
   </div>
   <div style="background:var(--surface);border-radius:var(--radius);padding:1rem;border:1px solid var(--border);margin-bottom:10px">
+    <div class="form-label">반응기 스케일 *</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button id="s-scale-20" onclick="setSynScale('20L')" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--accent);background:rgba(79,195,247,0.15);color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">20L</button>
+      <button id="s-scale-1" onclick="setSynScale('1L')" style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">1L</button>
+    </div>
     <div class="form-row" style="margin-bottom:8px">
       <div><label class="form-label">물질명/제품명 *</label><input class="form-input" id="s-name" placeholder="예: MEA Triazine" style="margin-bottom:0" /></div>
       <div><label class="form-label">목표 수량</label><input class="form-input" id="s-qty" placeholder="예: 500kg" style="margin-bottom:0" /></div>
@@ -217,13 +222,29 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     <input class="form-input" id="s-memo" placeholder="특이사항, 참고내용..." style="margin-bottom:10px" />
     <button class="submit-btn" onclick="addSyn()" style="background:rgba(79,195,247,0.15);color:var(--accent);border:1px solid rgba(79,195,247,0.3)">+ 항목 추가</button>
   </div>
-  <div id="syn-list"></div>
+  <!-- 20L 목록 -->
+  <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;margin-top:4px;display:flex;align-items:center;gap:6px">
+    <span style="background:rgba(79,195,247,0.15);border-radius:20px;padding:2px 12px">20L</span>
+    <span id="syn-count-20" style="font-size:11px;color:var(--text2)"></span>
+  </div>
+  <div id="syn-list-20" style="margin-bottom:14px"></div>
+  <!-- 1L 목록 -->
+  <div style="font-size:12px;font-weight:700;color:#81c784;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+    <span style="background:rgba(129,199,132,0.15);border-radius:20px;padding:2px 12px">1L</span>
+    <span id="syn-count-1" style="font-size:11px;color:var(--text2)"></span>
+  </div>
+  <div id="syn-list-1"></div>
 </div>
 
 <!-- 합성예정 수정 모달 -->
 <div class="modal-bg" id="syn-edit-modal" style="display:none" onclick="if(event.target===this)closeSynEdit()">
   <div class="modal">
     <div class="modal-title">합성 예정 수정</div>
+    <div class="form-label">반응기 스케일</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button id="es-scale-20" onclick="setEditSynScale('20L')" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--accent);background:rgba(79,195,247,0.15);color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">20L</button>
+      <button id="es-scale-1" onclick="setEditSynScale('1L')" style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit">1L</button>
+    </div>
     <label class="form-label">물질명/제품명</label><input class="form-input" id="es-name" />
     <div class="form-row">
       <div><label class="form-label">목표 수량</label><input class="form-input" id="es-qty" /></div>
@@ -496,29 +517,53 @@ window.switchTab=tab=>{
 };
 
 // 합성 예정
+let synScale='20L';
+window.setSynScale=scale=>{
+  synScale=scale;
+  const b20=document.getElementById("s-scale-20");
+  const b1=document.getElementById("s-scale-1");
+  if(scale==='20L'){
+    b20.style.border='2px solid var(--accent)';b20.style.background='rgba(79,195,247,0.15)';b20.style.color='var(--accent)';b20.style.fontWeight='700';
+    b1.style.border='1px solid var(--border)';b1.style.background='none';b1.style.color='var(--text2)';b1.style.fontWeight='500';
+  } else {
+    b1.style.border='2px solid #81c784';b1.style.background='rgba(129,199,132,0.15)';b1.style.color='#81c784';b1.style.fontWeight='700';
+    b20.style.border='1px solid var(--border)';b20.style.background='none';b20.style.color='var(--text2)';b20.style.fontWeight='500';
+  }
+};
+
+function makeSynCard(it){
+  const accentColor=it.scale==='1L'?'#81c784':'var(--accent)';
+  return `<div style="background:var(--surface);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-left:3px solid ${accentColor}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:14px;font-weight:500;flex:1">${it.name}</span>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button onclick="window._openEditSyn('${it.id}')" style="background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.3);color:var(--accent);border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">수정</button>
+        <button onclick="window._delSyn('${it.id}')" style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.3);color:#ef5350;border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">삭제</button>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap">
+      ${it.qty?`<span>목표: ${it.qty}</span>`:""}
+      ${it.who?`<span>담당: ${it.who}</span>`:""}
+      ${it.date?`<span>일정: ${it.date}</span>`:""}
+    </div>
+    ${it.memo?`<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic">${it.memo}</div>`:""}
+  </div>`;
+}
+
 onSnapshot(query(synCol,orderBy("createdAt")), snap=>{
   allSyn=snap.docs.map(d=>({id:d.id,...d.data()}));
-  const items=allSyn;
-  const list=document.getElementById("syn-list");
-  const count=document.getElementById("syn-count");
-  count.textContent=items.length?`${items.length}건`:"";
-  if(!items.length){list.innerHTML=`<div style="text-align:center;padding:1.5rem 0;color:var(--text2);font-size:13px">등록된 항목이 없습니다</div>`;return;}
-  list.innerHTML=items.map(it=>`
-    <div style="background:var(--surface);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-left:3px solid var(--accent)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <span style="font-size:14px;font-weight:500;flex:1">${it.name}</span>
-        <div style="display:flex;gap:4px;flex-shrink:0">
-          <button onclick="window._openEditSyn('${it.id}')" style="background:rgba(79,195,247,0.12);border:1px solid rgba(79,195,247,0.3);color:var(--accent);border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">수정</button>
-          <button onclick="window._delSyn('${it.id}')" style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.3);color:#ef5350;border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit">삭제</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap">
-        ${it.qty?`<span>목표: ${it.qty}</span>`:""}
-        ${it.who?`<span>담당: ${it.who}</span>`:""}
-        ${it.date?`<span>일정: ${it.date}</span>`:""}
-      </div>
-      ${it.memo?`<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic">${it.memo}</div>`:""}
-    </div>`).join("");
+  const items20=allSyn.filter(i=>i.scale==='20L'||!i.scale);
+  const items1=allSyn.filter(i=>i.scale==='1L');
+  const totalCount=document.getElementById("syn-count");
+  totalCount.textContent=allSyn.length?`${allSyn.length}건`:"";
+  const list20=document.getElementById("syn-list-20");
+  const list1=document.getElementById("syn-list-1");
+  const cnt20=document.getElementById("syn-count-20");
+  const cnt1=document.getElementById("syn-count-1");
+  cnt20.textContent=items20.length?`${items20.length}건`:"없음";
+  cnt1.textContent=items1.length?`${items1.length}건`:"없음";
+  list20.innerHTML=items20.length?items20.map(makeSynCard).join(""):`<div style="text-align:center;padding:1rem 0;color:var(--text2);font-size:13px">등록된 항목이 없습니다</div>`;
+  list1.innerHTML=items1.length?items1.map(makeSynCard).join(""):`<div style="text-align:center;padding:1rem 0;color:var(--text2);font-size:13px">등록된 항목이 없습니다</div>`;
 });
 
 window.addSyn=async()=>{
@@ -528,19 +573,32 @@ window.addSyn=async()=>{
   const who=document.getElementById("s-who").value.trim();
   const date=document.getElementById("s-date").value.trim();
   const memo=document.getElementById("s-memo").value.trim();
-  await addDoc(synCol,{name,qty,who,date,memo,createdAt:Date.now()});
+  await addDoc(synCol,{name,qty,who,date,memo,scale:synScale,createdAt:Date.now()});
   document.getElementById("s-name").value="";
   document.getElementById("s-qty").value="";
   document.getElementById("s-who").value="";
   document.getElementById("s-date").value="";
   document.getElementById("s-memo").value="";
-  showToast("항목 추가됐습니다 ✓");
+  showToast(`${synScale} 항목 추가됐습니다 ✓`);
 };
 
-let editSynId=null;
+let editSynId=null, editSynScale='20L';
+window.setEditSynScale=scale=>{
+  editSynScale=scale;
+  const b20=document.getElementById("es-scale-20");
+  const b1=document.getElementById("es-scale-1");
+  if(scale==='20L'){
+    b20.style.border='2px solid var(--accent)';b20.style.background='rgba(79,195,247,0.15)';b20.style.color='var(--accent)';b20.style.fontWeight='700';
+    b1.style.border='1px solid var(--border)';b1.style.background='none';b1.style.color='var(--text2)';b1.style.fontWeight='500';
+  } else {
+    b1.style.border='2px solid #81c784';b1.style.background='rgba(129,199,132,0.15)';b1.style.color='#81c784';b1.style.fontWeight='700';
+    b20.style.border='1px solid var(--border)';b20.style.background='none';b20.style.color='var(--text2)';b20.style.fontWeight='500';
+  }
+};
 window._openEditSyn=id=>{
   const it=allSyn.find(s=>s.id===id); if(!it)return;
   editSynId=id;
+  window.setEditSynScale(it.scale||'20L');
   document.getElementById("es-name").value=it.name||"";
   document.getElementById("es-qty").value=it.qty||"";
   document.getElementById("es-who").value=it.who||"";
@@ -554,7 +612,7 @@ window.saveSynEdit=async()=>{
   const name=document.getElementById("es-name").value.trim();
   if(!name){showToast("물질명을 입력해주세요");return;}
   await updateDoc(doc(db,"synthesis",editSynId),{
-    name,
+    name, scale:editSynScale,
     qty:document.getElementById("es-qty").value.trim(),
     who:document.getElementById("es-who").value.trim(),
     date:document.getElementById("es-date").value.trim(),
