@@ -227,18 +227,21 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:8px;margin-top:4px;display:flex;align-items:center;gap:8px">
     <span style="background:rgba(79,195,247,0.15);border-radius:20px;padding:4px 16px">20L</span>
     <span id="syn-count-20" style="font-size:13px;color:var(--text2)"></span>
+    <button onclick="toggleSection('syn-list-20','btn-20')" id="btn-20" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:3px 10px;cursor:pointer;font-family:inherit">접기 ▲</button>
   </div>
   <div id="syn-list-20" style="margin-bottom:16px"></div>
   <!-- 1L 목록 -->
   <div style="font-size:15px;font-weight:700;color:#81c784;margin-bottom:8px;display:flex;align-items:center;gap:8px">
     <span style="background:rgba(129,199,132,0.15);border-radius:20px;padding:4px 16px">1L</span>
     <span id="syn-count-1" style="font-size:13px;color:var(--text2)"></span>
+    <button onclick="toggleSection('syn-list-1','btn-1')" id="btn-1" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:3px 10px;cursor:pointer;font-family:inherit">접기 ▲</button>
   </div>
   <div id="syn-list-1" style="margin-bottom:16px"></div>
   <!-- 그외 목록 -->
   <div style="font-size:15px;font-weight:700;color:#ffb74d;margin-bottom:8px;display:flex;align-items:center;gap:8px">
     <span style="background:rgba(255,183,77,0.15);border-radius:20px;padding:4px 16px">그외</span>
     <span id="syn-count-etc" style="font-size:13px;color:var(--text2)"></span>
+    <button onclick="toggleSection('syn-list-etc','btn-etc')" id="btn-etc" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:3px 10px;cursor:pointer;font-family:inherit">접기 ▲</button>
   </div>
   <div id="syn-list-etc"></div>
 </div>
@@ -506,6 +509,12 @@ window._delCmt=async(id,idx)=>{
 };
 window.changeMonth=d=>{curM+=d;if(curM>12){curM=1;curY++;}if(curM<1){curM=12;curY--;}filterDate=null;renderAll();};
 window.clearFilter=()=>{filterDate=null;renderAll();};
+window.toggleSection=(listId,btnId)=>{
+  const list=document.getElementById(listId);
+  const btn=document.getElementById(btnId);
+  if(list.style.display==='none'){list.style.display='';btn.textContent='접기 ▲';}
+  else{list.style.display='none';btn.textContent='펼치기 ▼';}
+};
 window.shareLink=()=>{navigator.clipboard.writeText(window.location.href).then(()=>showToast("링크 복사됐습니다!")).catch(()=>showToast(window.location.href));};
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200);}
 
